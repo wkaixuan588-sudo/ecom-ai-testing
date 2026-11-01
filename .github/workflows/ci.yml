@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install pytest flask requests coverage allure-pytest
+
+      - name: Run tests (unit + api, with coverage)
+        run: |
+          coverage run --source=app -m pytest tests/unit tests/api -v --tb=line --alluredir=allure-results
+          coverage report -m
+
+      - name: Verify regression is green (80 passed)
+        run: pytest tests/unit tests/api -q | tail -1 | grep -q "80 passed"
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results/
+          retention-days: 14

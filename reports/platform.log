@@ -1,19 +1,27 @@
-INFO:     Started server process [20449]
+INFO:     Started server process [38272]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-INFO:     127.0.0.1:60780 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60862 - "POST /api/gen/functional HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60863 - "GET /api/langfuse HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60887 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60887 - "POST /api/gen/functional HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60888 - "GET /api/langfuse HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60888 - "GET /favicon.ico HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:60901 - "POST /api/gen/functional HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60901 - "POST /api/gen/api HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60901 - "POST /api/run HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60901 - "GET /api/run/1a626b5a HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60908 - "GET /api/governance HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60965 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60966 - "GET /allure/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60967 - "GET /api/report/xlsx HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64007 - "GET /api/suites HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64008 - "POST /api/run HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64034 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64067 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64089 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64112 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64143 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64167 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64201 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64226 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64292 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64321 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64332 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64356 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64378 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64390 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64419 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64437 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64438 - "GET /api/run/019050c0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64605 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64605 - "POST /api/gen/functional HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64607 - "GET /api/langfuse HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64607 - "GET /favicon.ico HTTP/1.1" 404 Not Found

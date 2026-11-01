@@ -75,10 +75,16 @@
 
   <!-- ③ 一键执行 -->
   <div class="card">
-    <div class="card-h"><b>③ 一键执行测试套件</b><span class="no">pytest · 80 用例 · Allure 实时采集</span></div>
+    <div class="card-h"><b>③ 一键执行测试套件</b><span class="no">pytest · 多套件可选 · Allure 实时采集</span></div>
     <div class="card-b">
-      <button class="btn" id="run-btn" onclick="runTests()">▶ 执行全部测试</button>
-      <div class="console" id="console" style="margin-top:12px">等待执行…点击上方按钮开始</div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <select id="suite-select" style="border:1px solid #d1d5db; border-radius:8px; padding:8px 10px; font-size:13px; flex:1;">
+          <option value="all">全量回归（80 用例：单元+API）</option>
+          <option value="saucedemo">UI 套件（saucedemo PO 模式 20 用例）</option>
+        </select>
+        <button class="btn" id="run-btn" onclick="runTests()" style="margin-top:0">▶ 执行所选套件</button>
+      </div>
+      <div class="console" id="console" style="margin-top:12px">等待执行…选择套件后点击执行</div>
     </div>
   </div>
 
@@ -133,7 +139,8 @@ let polling = null;
 async function runTests() {
   const btn = document.getElementById('run-btn'); btn.disabled = true; btn.textContent = '⏳ 执行中…';
   const con = document.getElementById('console'); con.textContent = '';
-  const r = await fetch('/api/run', {method:'POST'});
+  const r = await fetch('/api/run', {method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({suite: document.getElementById('suite-select').value})});
   const {task_id} = await r.json();
   polling = setInterval(async () => {
     const s = await (await fetch(`/api/run/${task_id}`)).json();

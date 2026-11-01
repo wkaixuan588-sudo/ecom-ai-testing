@@ -1,0 +1,32 @@
+$ cd /Users/retro/Downloads/pyt/harness/saucedemo_pom && /Users/retro/Downloads/pyt/harness/saucedemo_pom/.venv/bin/python -m pytest tests/ -v --tb=line
+
+============================= test session starts ==============================
+platform darwin -- Python 3.13.3, pytest-9.1.1, pluggy-1.6.0 -- /Users/retro/Downloads/pyt/harness/saucedemo_pom/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/retro/Downloads/pyt/harness/saucedemo_pom
+configfile: pytest.ini
+plugins: playwright-0.9.0, allure-pytest-2.16.2, base-url-2.1.0
+collecting ... collected 20 items
+
+tests/test_cart.py::test_add_and_remove_updates_badge[chromium] PASSED   [  5%]
+tests/test_cart.py::test_remove_item_from_cart_page[chromium] PASSED     [ 10%]
+tests/test_cart.py::test_error_user_add_to_cart_silently_fails[chromium] PASSED [ 15%]
+tests/test_checkout_flow.py::test_add_two_products_and_checkout[chromium] PASSED [ 20%]
+tests/test_checkout_flow.py::test_checkout_missing_required_field[chromium-first-Error: First Name is required] PASSED [ 25%]
+tests/test_login.py::test_login_matrix[chromium-standard_user] PASSED    [ 30%]
+tests/test_login.py::test_login_empty_username_and_password[chromium] PASSED [ 35%]
+tests/test_login.py::test_login_empty_password[chromium] PASSED          [ 40%]
+tests/test_login.py::test_login_wrong_password[chromium] PASSED          [ 45%]
+tests/test_sort.py::test_default_order_is_name_ascending[chromium] PASSED [ 50%]
+tests/test_sort.py::test_sort_name_descending[chromium] PASSED           [ 55%]
+tests/test_sort.py::test_sort_price_low_to_high[chromium] PASSED         [ 60%]
+tests/test_sort.py::test_sort_price_high_to_low[chromium] PASSED         [ 65%]
+tests/test_checkout_flow.py::test_checkout_missing_required_field[chromium-last-Error: Last Name is required] PASSED [ 70%]
+tests/test_login.py::test_login_matrix[chromium-performance_glitch_user] PASSED [ 75%]
+tests/test_checkout_flow.py::test_checkout_missing_required_field[chromium-postal-Error: Postal Code is required] PASSED [ 80%]
+tests/test_login.py::test_login_matrix[chromium-problem_user] PASSED     [ 85%]
+tests/test_login.py::test_login_matrix[chromium-error_user] PASSED       [ 90%]
+tests/test_login.py::test_login_matrix[chromium-visual_user] PASSED      [ 95%]
+tests/test_login.py::test_login_matrix[chromium-locked_out_user] PASSED  [100%]
+
+============================= 20 passed in 45.88s ==============================

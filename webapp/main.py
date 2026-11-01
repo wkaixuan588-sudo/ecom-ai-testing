@@ -43,28 +43,55 @@ def gen_api(body: dict):
     return generate("api", body.get("contract", ""))
 
 
-# ---------- ③ 一键执行（后台任务 + 轮询） ----------
+# ---------- ③ 一键执行（后台任务 + 轮询，多套件） ----------
 _TASKS: dict[str, dict] = {}
 
+SUITES = {
+    "all": {
+        "label": "全量回归（80 用例：单元+API）",
+        "cwd": str(ROOT),
+        "cmd": ["{py}", "-m", "pytest", "tests/unit", "tests/api", "-v", "--tb=line",
+                "--alluredir=reports/allure-results"],
+    },
+    "saucedemo": {
+        "label": "UI 套件（saucedemo PO 模式 20 用例）",
+        "cwd": str(ROOT.parent / "saucedemo_pom"),
+        "cmd": ["{py}", "-m", "pytest", "tests/", "-v", "--tb=line"],
+    },
+}
 
-def _run_pytest(tid: str):
+
+def _run_suite(tid: str, suite: str):
+    spec = SUITES[suite]
+    py = str(Path(spec["cwd"]) / ".venv/bin/python")
+    cmd = [c.format(py=py) for c in spec["cmd"]]
     log_path = ROOT / "reports" / f"run-{tid}.log"
     with open(log_path, "w") as f:
-        proc = subprocess.run(
-            [str(ROOT / ".venv/bin/python"), "-m", "pytest",
-             "tests/unit", "tests/api", "-v", "--tb=line", "--alluredir=reports/allure-results"],
-            cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=600,
-        )
-        f.write(proc.stdout)
+        f.write(f"$ cd {spec['cwd']} && {' '.join(cmd)}\n\n")
+        try:
+            proc = subprocess.run(cmd, cwd=spec["cwd"],
+                                  stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                  text=True, timeout=600)
+            f.write(proc.stdout)
+        except Exception as e:
+            f.write(f"执行异常: {e}\n")
     _TASKS[tid]["done"] = True
 
 
+@app.get("/api/suites")
+def list_suites():
+    return [{"id": k, "label": v["label"]} for k, v in SUITES.items()]
+
+
 @app.post("/api/run")
-def start_run():
+def start_run(body: dict | None = None):
+    suite = (body or {}).get("suite", "all")
+    if suite not in SUITES:
+        return JSONResponse({"error": f"unknown suite: {suite}"}, status_code=400)
     tid = uuid.uuid4().hex[:8]
     _TASKS[tid] = {"done": False}
-    threading.Thread(target=_run_pytest, args=(tid,), daemon=True).start()
-    return {"task_id": tid}
+    threading.Thread(target=_run_suite, args=(tid, suite), daemon=True).start()
+    return {"task_id": tid, "suite": SUITES[suite]["label"]}
 
 
 @app.get("/api/run/{tid}")
