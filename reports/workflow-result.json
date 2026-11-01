@@ -1,0 +1,40 @@
+{
+  "workflow": "test-governance",
+  "agents": 7,
+  "phases": [
+    {
+      "name": "覆盖率审计",
+      "agents": 4,
+      "modules_audited": ["pricing", "coupon", "inventory", "api"],
+      "branches_total": 49,
+      "missing_scenarios_high": 9,
+      "missing_scenarios_total": 37
+    },
+    {
+      "name": "失败诊断",
+      "agents": 2,
+      "total_run": 81,
+      "passed": 58,
+      "failed": 23,
+      "defect_groups": [
+        {"defect": "BUG-01 满减边界", "severity": "critical", "location": "app/pricing.py:32"},
+        {"defect": "BUG-02 金额精度", "severity": "minor", "location": "app/pricing.py:53"},
+        {"defect": "BUG-03 有效期边界", "severity": "minor", "location": "app/coupon.py:29"},
+        {"defect": "BUG-04 负金额负优惠", "severity": "critical", "location": "app/coupon.py:32"},
+        {"defect": "BUG-05 qty无校验可刷库存", "severity": "critical", "location": "app/inventory.py:15"},
+        {"defect": "BUG-06 API参数校验缺失", "severity": "blocker", "location": "app/api.py:86"},
+        {"defect": "BUG-07 前端未格式化", "severity": "critical", "location": "static/index.html:74-76"}
+      ]
+    },
+    {
+      "name": "风险评估",
+      "agents": 1,
+      "priorities": {"P0": 1, "P1": 3, "P2": 2, "P3": 1},
+      "top_test_gaps": [
+        "下单失败路径不回滚库存（零覆盖）",
+        "优惠券参数值域（rate>1/负rate/满减额>订单额）",
+        "负价格/负数量进入计价引擎"
+      ]
+    }
+  ]
+}

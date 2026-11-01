@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>AI 测试工作流 · Dify 效果示意图</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif; }
+  body { background:#f2f4f7; padding:20px; }
+  .banner { background:#1c1d21; color:#fff; border-radius:10px; padding:14px 20px; margin-bottom:16px;
+            display:flex; justify-content:space-between; align-items:center; }
+  .banner h1 { font-size:18px; font-weight:600; }
+  .banner .note { font-size:12px; color:#9ca3af; }
+  .grid { display:grid; grid-template-columns: 1.6fr 1fr; gap:16px; }
+  .panel { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,.08); }
+  .panel-head { padding:10px 16px; font-size:13px; font-weight:600; color:#374151;
+                border-bottom:1px solid #e5e7eb; display:flex; align-items:center; gap:8px; }
+  .tag { font-size:11px; padding:2px 8px; border-radius:20px; background:#eef2ff; color:#4f46e5; }
+  /* ---------- 画布 ---------- */
+  .canvas { position:relative; height:560px;
+            background-image:radial-gradient(#d8dce3 1px, transparent 1px); background-size:18px 18px; }
+  svg.edges { position:absolute; inset:0; width:100%; height:100%; }
+  .node { position:absolute; width:172px; background:#fff; border:1.5px solid #e5e7eb; border-radius:12px;
+          box-shadow:0 2px 6px rgba(0,0,0,.07); font-size:12px; }
+  .node .nh { display:flex; align-items:center; gap:7px; padding:9px 11px 7px; }
+  .node .ico { width:22px; height:22px; border-radius:6px; display:flex; align-items:center;
+               justify-content:center; font-size:12px; color:#fff; flex:none; }
+  .node .nt { font-weight:600; color:#111827; font-size:12.5px; }
+  .node .nd { padding:0 11px 9px; color:#6b7280; font-size:11px; line-height:1.5; }
+  .node .st { margin:0 11px 10px; font-size:10.5px; padding:3px 8px; border-radius:6px; display:inline-block; }
+  .ok  { background:#ecfdf5; color:#059669; }
+  .warn{ background:#fffbeb; color:#d97706; }
+  .err { background:#fef2f2; color:#dc2626; }
+  .port { position:absolute; right:-5px; top:22px; width:9px; height:9px; border-radius:50%;
+          background:#fff; border:2px solid #94a3b8; }
+  .port.in { right:auto; left:-5px; }
+  /* ---------- 右列 ---------- */
+  .chat { padding:16px; display:flex; flex-direction:column; gap:10px; height:300px; }
+  .msg { max-width:86%; padding:9px 12px; border-radius:12px; font-size:12.5px; line-height:1.6; }
+  .user { align-self:flex-end; background:#4f46e5; color:#fff; border-bottom-right-radius:4px; }
+  .bot  { align-self:flex-start; background:#f3f4f6; color:#1f2937; border-bottom-left-radius:4px; }
+  .bot b { color:#059669; }
+  .inputbar { display:flex; gap:8px; padding:0 16px 16px; }
+  .inputbar input { flex:1; border:1px solid #d1d5db; border-radius:8px; padding:8px 10px; font-size:12px; }
+  .inputbar button { background:#4f46e5; color:#fff; border:0; border-radius:8px; padding:8px 16px;
+                     font-size:12px; cursor:pointer; }
+  .logs { padding:12px 16px; font-family:"SF Mono",Menlo,monospace; font-size:11px; line-height:1.9;
+          background:#0f172a; color:#cbd5e1; height:212px; overflow:hidden; border-radius:0 0 12px 12px; }
+  .logs .g { color:#34d399; } .logs .y { color:#fbbf24; } .logs .b { color:#60a5fa; }
+  .foot { margin-top:14px; text-align:center; font-size:11.5px; color:#9ca3af; }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <h1>AI 测试工作流 · 若迁移到 Dify 的效果示意</h1>
+  <div class="note">示意图：模拟 Dify Workflow Studio 与发布页视觉，非真实产品截图</div>
+</div>
+
+<div class="grid">
+  <!-- ① 编排画布 -->
+  <div class="panel">
+    <div class="panel-head">① Workflow Studio —— 可视化编排画布（开发/维护视角） <span class="tag">拖拽搭建</span></div>
+    <div class="canvas">
+      <svg class="edges">
+        <path d="M 178 78  C 218 78, 218 78, 250 78"  stroke="#94a3b8" stroke-width="2" fill="none"/>
+        <path d="M 428 78  C 468 78, 468 88, 500 88"  stroke="#94a3b8" stroke-width="2" fill="none"/>
+        <path d="M 678 88  C 718 88, 718 70, 748 70"  stroke="#94a3b8" stroke-width="2" fill="none"/>
+        <path d="M 924 105 C 960 105, 700 210, 660 240" stroke="#94a3b8" stroke-width="2" fill="none"/>
+        <path d="M 490 268 C 420 300, 330 300, 262 288" stroke="#94a3b8" stroke-width="2" fill="none"/>
+        <path d="M 90  262 C 60  220, 60 120, 82 108"  stroke="#94a3b8" stroke-width="2" fill="none" stroke-dasharray="5,4"/>
+      </svg>
+
+      <div class="node" style="left:8px; top:50px;">
+        <div class="nh"><div class="ico" style="background:#0891b2">▶</div><div class="nt">开始</div></div>
+        <div class="nd">输入：被测模块 / 需求文档</div><div class="port"></div>
+      </div>
+
+      <div class="node" style="left:250px; top:50px;">
+        <div class="nh"><div class="ico" style="background:#8b5cf6">✦</div><div class="nt">用例生成 Agent</div></div>
+        <div class="nd">LLM 按等价类/边界值生成 pytest 用例</div>
+        <div class="st ok">46 cases</div><div class="port in"></div><div class="port"></div>
+      </div>
+
+      <div class="node" style="left:500px; top:60px;">
+        <div class="nh"><div class="ico" style="background:#059669">⚙</div><div class="nt">执行测试</div></div>
+        <div class="nd">代码节点：运行 pytest，采集通过/失败</div>
+        <div class="st err">10 failed</div><div class="port in"></div><div class="port"></div>
+      </div>
+
+      <div class="node" style="left:748px; top:42px;">
+        <div class="nh"><div class="ico" style="background:#d97706">◈</div><div class="nt">条件分支</div></div>
+        <div class="nd">存在失败？</div>
+        <div class="st warn">IF failed &gt; 0</div><div class="port in"></div><div class="port"></div>
+      </div>
+
+      <div class="node" style="left:480px; top:215px;">
+        <div class="nh"><div class="ico" style="background:#dc2626">✚</div><div class="nt">失败诊断 Agent</div></div>
+        <div class="nd">归因到源码行 + 定级 + 修复建议</div>
+        <div class="st err">7 defects</div><div class="port in"></div><div class="port"></div>
+      </div>
+
+      <div class="node" style="left:95px; top:238px;">
+        <div class="nh"><div class="ico" style="background:#2563eb">▤</div><div class="nt">测试报告</div></div>
+        <div class="nd">汇总 xlsx / Allure / Langfuse 上报</div>
+        <div class="st ok">done</div><div class="port in"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右列：入口页 + 日志 -->
+  <div style="display:flex; flex-direction:column; gap:16px;">
+    <div class="panel">
+      <div class="panel-head">② 发布后的入口页（使用者视角） <span class="tag">网页即用</span></div>
+      <div class="chat">
+        <div class="user">为 app/pricing.py 的书籍满减活动生成测试</div>
+        <div class="bot">✅ 已完成本轮 AI 测试流水线：<br>
+          • 生成用例 <b>46</b> 个（等价类+边界值）<br>
+          • 执行结果：<b>36 通过</b> / 10 失败<br>
+          • 诊断定位 <b>5 个缺陷</b>（含满减边界 BUG-01）<br>
+          • 报告已生成，trace 已上报 Langfuse</div>
+      </div>
+      <div class="inputbar">
+        <input placeholder="输入被测模块或需求…">
+        <button>运行</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">③ 运行日志（每次执行的节点级记录）</div>
+      <div class="logs">
+<span class="b">[10:32:01]</span> workflow run <span class="g">started</span><br>
+<span class="b">[10:32:04]</span> node:用例生成Agent <span class="g">✓</span> tokens=18.2k 45s<br>
+<span class="b">[10:32:49]</span> node:执行测试 <span class="y">✓</span> 36P/10F in 0.3s<br>
+<span class="b">[10:33:02]</span> node:条件分支 → <span class="y">failed&gt;0</span><br>
+<span class="b">[10:33:15]</span> node:诊断Agent <span class="g">✓</span> 7 defects located<br>
+<span class="b">[10:33:40]</span> node:测试报告 <span class="g">✓</span> xlsx+allure+langfuse<br>
+<span class="b">[10:33:41]</span> workflow run <span class="g">finished</span> total=100s
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">对比：Langfuse 方案 = 只做「后台数据」（你现在已接入）；Dify 方案 = 增加可视化「入口 + 编排画布」；
+两者可叠加：Dify 编排执行 → Langfuse 收数据。</div>
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "before_fix": {"total": 80, "passed": 58, "failed": 22, "line_coverage": "98%"},
+  "after_fix": {"total": 80, "passed": 80, "failed": 0, "line_coverage": "98%"},
+  "layers": {"L1_unit": 46, "L2_api": 34, "L3_ui_scenarios": 3},
+  "defects_found": 7, "defects_fixed": 7,
+  "workflow_agents": 7, "workflow_phases": ["覆盖率审计", "失败诊断", "风险评估"]
+}

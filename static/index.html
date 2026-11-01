@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>极简商城 · 下单页</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 560px; margin: 40px auto; background: #f7f8fa; }
+  .card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+  h1 { font-size: 20px; }
+  label { display: block; margin: 12px 0 4px; font-size: 14px; color: #555; }
+  select, input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+  button { margin-top: 16px; width: 100%; padding: 12px; background: #ff6a00; color: #fff; border: 0;
+           border-radius: 6px; font-size: 16px; cursor: pointer; }
+  #result { margin-top: 16px; padding: 12px; background: #f0f9eb; border-radius: 6px; display: none; }
+  .row { display: flex; justify-content: space-between; font-size: 14px; margin: 4px 0; }
+  .payable { font-size: 20px; font-weight: 700; color: #ff6a00; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>极简商城 · 下单</h1>
+  <label>商品</label>
+  <select id="sku"></select>
+  <label>数量</label>
+  <input id="qty" type="number" value="1" min="1">
+  <label>会员等级</label>
+  <select id="level">
+    <option value="normal">普通会员</option>
+    <option value="silver">银卡会员（95 折）</option>
+    <option value="gold">金卡会员（9 折）</option>
+  </select>
+  <label>优惠券</label>
+  <select id="coupon">
+    <option value="">不使用优惠券</option>
+    <option value="C-FULL-20">满 200 减 20</option>
+    <option value="C-DISC-85">85 折（封顶 50）</option>
+  </select>
+  <button id="submit">提交订单</button>
+  <div id="result">
+    <div class="row"><span>小计</span><span id="subtotal"></span></div>
+    <div class="row"><span>优惠</span><span id="saving"></span></div>
+    <div class="row"><span>应付</span><span class="payable" id="payable"></span></div>
+  </div>
+</div>
+<script>
+async function loadProducts() {
+  const r = await fetch('/api/products');
+  const d = await r.json();
+  const sel = document.getElementById('sku');
+  d.products.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p.sku;
+    o.textContent = `${p.name}（¥${p.price}）`;
+    sel.appendChild(o);
+  });
+}
+
+// [种子缺陷 #7] 前端展示未做金额格式化：
+// 接口返回 95.00000000000001（源于缺陷 #2）时页面原样展示，
+// 前后端一致性缺陷，也说明 UI 测试能反向暴露后端精度问题
+document.getElementById('submit').addEventListener('click', async () => {
+  const body = {
+    sku: document.getElementById('sku').value,
+    qty: Number(document.getElementById('qty').value),
+    member_level: document.getElementById('level').value,
+    coupon_id: document.getElementById('coupon').value || null,
+  };
+  const r = await fetch('/api/orders', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body),
+  });
+  const d = await r.json();
+  // 修复 #7：金额展示统一格式化，避免浮点噪声原样透出
+  const fmt = v => '¥' + Number(v).toFixed(2);
+  if (r.ok) {
+    document.getElementById('subtotal').textContent = fmt(d.payable + d.coupon_saving);
+    document.getElementById('saving').textContent = '-¥' + Number(d.coupon_saving).toFixed(2);
+    document.getElementById('payable').textContent = fmt(d.payable);
+    document.getElementById('result').style.display = 'block';
+  } else {
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('payable').textContent = '下单失败：' + (d.error || r.status);
+  }
+});
+
+loadProducts();
+</script>
+</body>
+</html>
