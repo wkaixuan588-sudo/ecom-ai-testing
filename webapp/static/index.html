@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-Native 测试平台</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif; }
+  body { background:#f2f4f7; color:#1f2937; }
+  header { background:#111827; color:#fff; padding:18px 32px; display:flex; justify-content:space-between; align-items:center; }
+  header h1 { font-size:19px; font-weight:600; }
+  header .sub { font-size:12px; color:#9ca3af; }
+  .badge { background:#4f46e5; font-size:11px; padding:3px 10px; border-radius:20px; }
+  main { max-width:1280px; margin:20px auto; padding:0 20px; display:grid; gap:16px; }
+  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .card { background:#fff; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.07); overflow:hidden; }
+  .card-h { padding:12px 18px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center; }
+  .card-h b { font-size:14px; } .card-h .no { font-size:11px; color:#4f46e5; background:#eef2ff; padding:2px 8px; border-radius:6px; }
+  .card-b { padding:14px 18px; }
+  textarea { width:100%; height:110px; border:1px solid #d1d5db; border-radius:8px; padding:10px; font-size:12.5px; resize:vertical; }
+  .btn { background:#4f46e5; color:#fff; border:0; border-radius:8px; padding:8px 18px; font-size:13px; cursor:pointer; margin-top:10px; }
+  .btn:hover { background:#4338ca; } .btn.ghost { background:#fff; color:#4f46e5; border:1.5px solid #c7d2fe; }
+  .mode { font-size:11px; color:#6b7280; margin-left:10px; }
+  table { width:100%; border-collapse:collapse; font-size:12px; margin-top:10px; }
+  th { background:#f9fafb; text-align:left; padding:7px 9px; border-bottom:1.5px solid #e5e7eb; color:#374151; white-space:nowrap; }
+  td { padding:6px 9px; border-bottom:1px solid #f3f4f6; vertical-align:top; line-height:1.55; }
+  .m { font-size:10.5px; padding:1px 7px; border-radius:10px; background:#f0fdf4; color:#059669; white-space:nowrap; display:inline-block; }
+  .m.b { background:#eff6ff; color:#2563eb; } .m.e { background:#fef2f2; color:#dc2626; } .m.p { background:#faf5ff; color:#9333ea; }
+  .console { background:#0f172a; color:#cbd5e1; font-family:"SF Mono",Menlo,monospace; font-size:11.5px;
+             line-height:1.75; padding:12px 14px; border-radius:8px; height:240px; overflow-y:auto; white-space:pre-wrap; }
+  .console .g { color:#34d399; } .console .r { color:#f87171; }
+  .pass { color:#059669; font-weight:700; } .fail { color:#dc2626; font-weight:700; }
+  .report-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .rpt { border:1.5px solid #e5e7eb; border-radius:10px; padding:14px; text-align:center; text-decoration:none; color:#1f2937; display:block; transition:.15s; }
+  .rpt:hover { border-color:#4f46e5; background:#eef2ff; }
+  .rpt .ico { font-size:22px; } .rpt div { font-size:12.5px; margin-top:6px; font-weight:600; } .rpt span { font-size:11px; color:#6b7280; }
+  .gov { font-size:12.5px; line-height:1.9; }
+  .gov li { margin-left:18px; }
+  .pv { display:inline-block; font-size:10.5px; padding:1px 8px; border-radius:10px; margin-right:6px; }
+  .p0 { background:#fef2f2; color:#dc2626; } .p1 { background:#fff7ed; color:#ea580c; } .p2 { background:#fffbeb; color:#d97706; } .p3 { background:#f0fdf4; color:#059669; }
+  footer { text-align:center; font-size:11px; color:#9ca3af; padding:16px 0 28px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>AI-Native 测试平台 <span class="badge">MVP · 路线C</span></h1>
+    <div class="sub">AI 生成功能用例 · AI 生成接口用例 · 一键执行 · 测试报告 —— DeepSeek Harness 工作流产品化</div>
+  </div>
+  <div class="sub" id="provider-tag">引擎：检测中…</div>
+</header>
+
+<main>
+  <div class="row2">
+    <!-- ① 功能用例生成 -->
+    <div class="card">
+      <div class="card-h"><b>① AI 生成功能测试用例</b><span class="no">等价类·边界值·异常输入</span></div>
+      <div class="card-b">
+        <textarea id="req-input" placeholder="粘贴需求文档…（演示模式可不填，直接点击生成）"></textarea>
+        <button class="btn" onclick="genFunctional()">⚙ 生成功能用例</button><span class="mode" id="f-mode"></span>
+        <div id="f-table"></div>
+      </div>
+    </div>
+    <!-- ② 接口用例生成 -->
+    <div class="card">
+      <div class="card-h"><b>② AI 生成接口测试用例</b><span class="no">契约驱动·状态码矩阵</span></div>
+      <div class="card-b">
+        <textarea id="api-input" placeholder="粘贴接口契约（swagger/文档）…（演示模式可不填）"></textarea>
+        <button class="btn" onclick="genApi()">⚙ 生成接口用例</button><span class="mode" id="a-mode"></span>
+        <div id="a-table"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ 一键执行 -->
+  <div class="card">
+    <div class="card-h"><b>③ 一键执行测试套件</b><span class="no">pytest · 80 用例 · Allure 实时采集</span></div>
+    <div class="card-b">
+      <button class="btn" id="run-btn" onclick="runTests()">▶ 执行全部测试</button>
+      <div class="console" id="console" style="margin-top:12px">等待执行…点击上方按钮开始</div>
+    </div>
+  </div>
+
+  <!-- ④ 报告中心 -->
+  <div class="card">
+    <div class="card-h"><b>④ 测试报告中心</b><span class="no">xlsx / Allure / Langfuse / 治理报告</span></div>
+    <div class="card-b">
+      <div class="report-grid">
+        <a class="rpt" href="/api/report/xlsx"><div class="ico">📊</div><div>xlsx 测试报告</div><span>缺陷清单·用例统计·风险</span></a>
+        <a class="rpt" href="/allure/" target="_blank"><div class="ico">📈</div><div>Allure 报告</div><span>80 用例 · 红→绿趋势</span></a>
+        <a class="rpt" href="#" id="lf-link" target="_blank"><div class="ico">🔭</div><div>Langfuse 看板</div><span>流水线运行数据</span></a>
+        <a class="rpt" href="#" onclick="showGov();return false;"><div class="ico">🧭</div><div>治理报告</div><span>多代理审计·诊断·定级</span></a>
+      </div>
+      <div id="gov-area" style="display:none; margin-top:14px; border-top:1px dashed #e5e7eb; padding-top:12px;" class="gov"></div>
+    </div>
+  </div>
+
+  <footer>AI-Native 软件测试实战项目 · 生成→执行→诊断→报告 全链路 · 引擎可切换 GLM/DeepSeek/演示模式</footer>
+</main>
+
+<script>
+const methodCls = m => m.includes('边界') ? 'm b' : (m.includes('异常') ? 'm e' : (m.includes('精度')||m.includes('时间') ? 'm p' : 'm'));
+
+async function genFunctional() {
+  const body = {requirement: document.getElementById('req-input').value || "电商订单计价：会员折扣(normal/silver 95折/gold 9折)；书籍类满100减10；金额保留两位小数"};
+  const r = await fetch('/api/gen/functional', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+  const d = await r.json();
+  document.getElementById('f-mode').textContent = `${d.mode} · ${d.count} 条`;
+  document.getElementById('f-table').innerHTML = table(d.cases,
+    ['title','method','precondition','steps','expected'], ['用例标题','方法','前置','步骤','预期']);
+}
+async function genApi() {
+  const body = {contract: document.getElementById('api-input').value || "POST /api/orders {sku,qty,member_level,coupon_id}: 201成功/400参数/404sku不存在/409库存不足; POST /api/coupons/<id>/apply {order_amount}"};
+  const r = await fetch('/api/gen/api', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+  const d = await r.json();
+  document.getElementById('a-mode').textContent = `${d.mode} · ${d.count} 条`;
+  document.getElementById('a-table').innerHTML = table(d.cases,
+    ['name','method','http','body','expected_status','checkpoint'], ['用例名','方法','接口','请求体','期望状态码','断言要点'], true);
+}
+function table(cases, keys, heads, hasStatus) {
+  let h = `<table><tr>${heads.map(x=>`<th>${x}</th>`).join('')}</tr>`;
+  for (const c of cases) {
+    h += '<tr>' + keys.map(k =>
+      k==='method' ? `<td><span class="${methodCls(c[k])}">${c[k]}</span></td>`
+      : (hasStatus && k==='expected_status') ? `<td><b>${c[k]}</b></td>`
+      : `<td>${c[k]??''}</td>`).join('') + '</tr>';
+  }
+  return h + '</table>';
+}
+
+let polling = null;
+async function runTests() {
+  const btn = document.getElementById('run-btn'); btn.disabled = true; btn.textContent = '⏳ 执行中…';
+  const con = document.getElementById('console'); con.textContent = '';
+  const r = await fetch('/api/run', {method:'POST'});
+  const {task_id} = await r.json();
+  polling = setInterval(async () => {
+    const s = await (await fetch(`/api/run/${task_id}`)).json();
+    con.innerHTML = s.log.replace(/PASSED/g,'<span class="g">PASSED</span>').replace(/FAILED/g,'<span class="r">FAILED</span>');
+    con.scrollTop = con.scrollHeight;
+    if (s.done) {
+      clearInterval(polling);
+      const m = s.log.match(/(\d+) passed/), f = s.log.match(/(\d+) failed/);
+      con.innerHTML += `\n========== 执行完成：${m?`<span class="pass">${m[0]}</span>`:''} ${f?`<span class="fail">${f[0]}</span>`:''} ==========\n`;
+      btn.disabled = false; btn.textContent = '▶ 再次执行';
+    }
+  }, 800);
+}
+
+async function showGov() {
+  const g = await (await fetch('/api/governance')).json();
+  const diag = (g.phases||[]).find(p=>p.name==='失败诊断');
+  const risk = (g.phases||[]).find(p=>p.name==='风险评估');
+  let html = `<b>🧭 L4 多代理测试治理</b>（${g.agents||7} 个子代理 · 三阶段）
+    <ul><li><b>失败诊断</b>：${diag?`定位 ${diag.defect_groups.length} 组缺陷`:'—'}</li>`;
+  if (diag) for (const d of diag.defect_groups)
+    html += `<li><span class="pv ${d.severity==='blocker'?'p0':d.severity==='critical'?'p1':d.severity==='major'?'p2':'p3'}">${d.severity}</span>${d.defect} <code style="font-size:11px;color:#6b7280">${d.location}</code></li>`;
+  if (risk) { html += `<li><b>修复优先级</b>：`;
+    for (const [k,v] of Object.entries(risk.priorities)) html += `<span class="pv ${k.toLowerCase()}">${k}×${v}</span>`;
+    html += `</li><li><b>测试资产缺口</b>：${risk.top_test_gaps.join('；')}</li>`; }
+  document.getElementById('gov-area').innerHTML = html + '</ul>';
+  document.getElementById('gov-area').style.display = 'block';
+}
+
+// 引擎标签 + Langfuse 链接
+fetch('/api/gen/functional', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{"requirement":"ping"}'})
+  .then(r=>r.json()).then(d=>document.getElementById('provider-tag').textContent = '生成引擎：' + d.mode);
+fetch('/api/langfuse').then(r=>r.json()).then(d=>{
+  const t = (d.traces||[])[0];
+  if (t) document.getElementById('lf-link').href = t.url;
+});
+</script>
+</body>
+</html>
