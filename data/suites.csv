@@ -1,189 +1,189 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"等价类：gold 9 折，rate = 0.90","0","test_member_rate_gold","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
-"POST /api/orders 缺 qty 字段 —— 非法参数，契约要求 400。
-
-验证点: 400 + error。现状: None 与 int 比较抛 TypeError -> 500 -> 失败。
-","0","test_order_qty_missing_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"等价类（有效输入）：库存充足，扣减成功且库存更新","0","test_deduct_normal","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
-"POST /api/orders 库存不足 —— EL-001 仅 10 件，请求 11 件。
-
-验证点: 409；error 提及库存；STOCK 未被扣减。
-","1","test_order_insufficient_stock_409","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"POST /api/orders sku 不存在 —— 契约要求 404 + error。
-
-验证点: 404；body 含非空 error 字段。
-","0","test_order_unknown_sku_404","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"POST /api/coupons/<cid>/apply now == valid_to 整点 —— 闭区间终点当天仍可用。
-
-验证点（需求 v1.2 第 3 条）: 200 且 saving == 20.0。
-现状缺陷 #3: coupon.py 用 now < valid_to，返回 0.0 -> 用例失败。
-","0","test_apply_at_valid_to_boundary","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"异常输入（非法键）：sku 不存在返回 False","0","test_deduct_unknown_sku","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
-"POST /api/orders qty=""abc"" —— 非法参数，契约要求 400。
-
-验证点: 400 + error。现状: inventory.deduct 内 TypeError -> 500 -> 失败。
-","1","test_order_qty_not_numeric_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"POST /api/orders 带不存在券号的宽容行为（契约未定义 404）。
-
-验证点: 201 且 coupon_saving == 0（不崩溃、不倒扣）。
-","1","test_create_order_with_unknown_coupon","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"等价类：normal 无折扣，rate = 1.0","0","test_member_rate_normal","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
-"异常输入（空）：coupon 为 None 返回 0","0","test_none_coupon","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
-"异常输入（0）：订单金额为 0 不是正数，优惠为 0","0","test_zero_amount_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
-"边界值：到期日当天 valid_to 整点应仍可使用（闭区间右端点，需求 v1.2）","0","test_valid_on_valid_to_boundary","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
-"异常输入（非法值）：未知券类型返回 0","0","test_unknown_coupon_type","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
-"需求规则4（精度）：结果必须保留两位小数。
-100 * 0.95 的浮点噪声 95.00000000000001 不可接受。","0","test_total_gold_with_book_promo_two_decimals","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
-"POST /api/coupons/C-DISC-85/apply 金额 500 —— 优惠 75 触发封顶 50。
-
-验证点: 200；saving == 50.0。
-","0","test_apply_discount_capped","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"边界值：扣减数量恰好等于剩余库存（qty == stock），成功且归零","0","test_deduct_exact_stock","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
-"等价类：gold 会员 + 书籍满 100 减 10：(100 - 10) × 0.9 = 81.00","0","test_total_gold_book_promo_value","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
-"异常输入（0）：qty=0 非正整数，应拒绝且库存不变","0","test_deduct_qty_zero_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
-"POST /api/orders 缺 sku 字段 —— sku 为 None 等价于不存在。
-
-验证点: 404 + error。
-","0","test_order_missing_sku_404","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"等价类：非 book 品类不参与书籍满减","0","test_book_promotion_mixed_types_only_book_counts","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
-"等价类：普通会员、无满减，总额 = 小计，两位小数","0","test_total_basic_normal_no_promo","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
-"POST /api/coupons/C-FULL-20/apply 金额 250 —— 满 200 减 20。
-
-验证点: 200；saving == 20.0。
-","0","test_apply_full_reduction_above_threshold","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"边界值：最小正整数 qty=1 可扣减","0","test_deduct_qty_one","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
-"边界值：晚于 valid_to 不可用","0","test_invalid_after_valid_to","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
-"POST /api/orders 书籍满减边界 —— BK-002 单价 100，qty=1 恰好 100 元。
-
-验证点（需求: 满 100 含 100）: 201 且 payable == 90.0。
-现状缺陷 #1: pricing.book_promotion 用严格大于，实际返回 100.0 -> 用例失败。
-","0","test_create_order_book_promo_exact_100","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"等价类：优惠低于封顶时不封顶","0","test_discount_not_capped","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
-"POST /api/orders qty=1.5 —— 数量必须为正整数，契约要求 400。
-
-验证点: 400 + error。现状: 返回 201 且库存被扣成小数 -> 失败。
-","0","test_order_qty_float_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"异常输入（负数）：负金额 + 满减券（低门槛）也必须返回 0","0","test_negative_amount_full_reduction_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
 "GET /api/products —— 返回 200 与全部商品（sku/name/price/sku_type/stock）。
 
 验证点: 状态码 200；products 为列表且包含全部 3 个 sku；字段齐全。
-","2","test_get_products_list","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"等价类（有效输入）：9 折券优惠 = amount × (1 - rate)","1","test_discount_basic","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
-"POST /api/coupons/C-DISC-85/apply order_amount=-100 —— 负数为非法参数。
+","1","test_get_products_list","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"异常输入（0）：qty=0 非正整数，应拒绝且库存不变","0","test_deduct_qty_zero_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
+"等价类（有效输入）：单商品小计","0","test_subtotal_single_item","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"POST /api/orders 库存不足 —— EL-001 仅 10 件，请求 11 件。
 
-验证点: 400 + error。现状缺陷 #4: 折扣券算出 saving=-15 且返回 200 -> 失败。
-","1","test_apply_order_amount_negative_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"异常输入（非法类型）：bool 是 int 子类但不应视为合法数量","0","test_deduct_bool_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
-"异常输入（空）：空订单小计为 0","0","test_subtotal_empty_items","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
-"等价类：优惠超过封顶 cap 时取 cap","0","test_discount_capped","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
-"异常输入（非法值）：未知会员等级应抛 ValueError","0","test_member_rate_unknown_level","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
-"异常输入（非法类型）：qty 为浮点数 2.5 非正整数，应拒绝","0","test_deduct_qty_float_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
-"边界值：早于 valid_from 不可用","0","test_invalid_before_valid_from","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
-"POST /api/orders 库存边界 —— qty == stock(10) 应成功并清空库存。
-
-验证点: 第一次 201；随后再下 1 件 -> 409。
-","0","test_create_order_qty_equals_stock","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"POST /api/coupons/<cid>/apply now < valid_from —— 未生效无优惠。
-
-验证点: 200；saving == 0.0。
-","0","test_apply_before_valid_from","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"异常输入（负数）：订单金额为负时优惠必须为 0（折扣券不得算出负优惠/反向加钱）","0","test_negative_amount_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
-"异常输入（空）：空订单总额为 0","0","test_total_empty_items","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
-"POST /api/coupons/<cid>/apply 缺 order_amount —— 非法参数，契约要求 400。
-
-验证点: 400 + error。现状: None 参与乘法 -> 500 -> 失败。
-","0","test_apply_order_amount_missing_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"POST /api/orders normal —— 普通会员无折扣、无满减（89 < 100）。
-
-验证点: 201；payable == 89.0；coupon_saving == 0。
-","0","test_create_order_normal","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"POST /api/orders 书籍满减（低于阈值）—— 89 < 100 不减免。
-
-验证点: 201；payable == 89.0。
-","0","test_create_order_book_promo_below_threshold","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"边界值：书籍小计 = 99.99（略低于阈值），不减免","0","test_book_promotion_just_below_100","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
-"POST /api/orders gold —— 9 折（399 -> 359.1），无书籍满减（非 book）。
-
-验证点: 201；payable == 359.1。
-","0","test_create_order_gold","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"异常输入（负数）：qty=-5 必须拒绝，且不得反向增加库存","0","test_deduct_qty_negative_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
-"边界值：书籍小计恰好 = 100（""满100元""含100），应减免 10","0","test_book_promotion_exactly_100","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
-"POST /api/orders member_level=""platinum"" —— 非法参数，契约要求 400。
-
-验证点: 400 + error。现状: pricing 抛 ValueError -> 500 -> 失败。
-","0","test_order_invalid_member_level_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+验证点: 409；error 提及库存；STOCK 未被扣减。
+","0","test_order_insufficient_stock_409","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
 "POST /api/orders qty=-1 —— 非法参数，契约要求 400，且不得增加库存。
 
 验证点: 400 + error；STOCK 不变。现状: 返回 201 且库存 +1（缺陷 #5）-> 失败。
 ","0","test_order_qty_negative_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"POST /api/coupons/<cid>/apply order_amount=0 —— 需求要求金额为正数。
+"POST /api/orders member_level=""platinum"" —— 非法参数，契约要求 400。
 
-验证点: 400 + error。现状: 返回 200 saving=0 -> 失败。
-","0","test_apply_order_amount_zero_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+验证点: 400 + error。现状: pricing 抛 ValueError -> 500 -> 失败。
+","0","test_order_invalid_member_level_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"边界值：扣减数量恰好等于剩余库存（qty == stock），成功且归零","0","test_deduct_exact_stock","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
+"POST /api/orders sku 不存在 —— 契约要求 404 + error。
+
+验证点: 404；body 含非空 error 字段。
+","0","test_order_unknown_sku_404","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
 "异常输入（空）：qty 为 None 应拒绝（或抛 TypeError），不得改动库存","0","test_deduct_qty_none_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
-"POST /api/orders 书籍满减（高于阈值）—— 89*2=178 > 100 立减 10。
-
-验证点: 201；normal payable == 168.0。
-","0","test_create_order_book_promo_above_threshold","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"等价类：有效期中间时间点可用","0","test_valid_inside_window","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
-"POST /api/orders 带满减券 —— EL-001 399 >= 200 减 20。
-
-验证点: 201；coupon_saving == 20.0；payable == 379.0。
-","1","test_create_order_with_full_reduction_coupon","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"等价类（有效输入）：单商品小计","1","test_subtotal_single_item","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
-"等价类（有效输入）：多商品小计 = Σ(price × qty)","0","test_subtotal_basic","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
-"边界值：qty = stock + 1，拒绝且库存不变（不得负库存）","0","test_deduct_more_than_stock_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
-"需求规则4（精度）：第三位小数按 ROUND_HALF_UP 保留两位。
-3 件 10.005 元：小计 30.015 → 30.02（普通会员）","0","test_total_result_rounded_half_up","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
-"等价类（有效输入）：书籍小计 > 100，减免 10","1","test_book_promotion_above_threshold","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"边界值：晚于 valid_to 不可用","0","test_invalid_after_valid_to","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
 "POST /api/coupons/<cid>/apply now == valid_from —— 闭区间起点可用。
 
 验证点: 200；saving == 20.0。
-","1","test_apply_at_valid_from_boundary","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"POST /api/coupons/C-FULL-20/apply 金额 199.99 —— 未达阈值无优惠。
+","0","test_apply_at_valid_from_boundary","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"POST /api/orders normal —— 普通会员无折扣、无满减（89 < 100）。
 
-验证点: 200；saving == 0.0。
-","0","test_apply_full_reduction_below_threshold","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"POST /api/coupons/<cid>/apply now > valid_to —— 过期券无优惠。
-
-验证点: 200；saving == 0.0。
-","0","test_apply_after_valid_to","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"异常输入（空）：空列表减免 0","0","test_book_promotion_empty","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+验证点: 201；payable == 89.0；coupon_saving == 0。
+","1","test_create_order_normal","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"异常输入（空）：coupon 为 None 返回 0","0","test_none_coupon","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
+"边界值：早于 valid_from 不可用","0","test_invalid_before_valid_from","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
 "POST /api/orders silver —— 95 折，金额保留两位小数。
 
 验证点: 201；payable == round(89 * 0.95, 2) == 84.55。
 ","1","test_create_order_silver","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"POST /api/orders 缺省 member_level —— 默认 normal，无折扣。
+"异常输入（负数）：qty=-5 必须拒绝，且不得反向增加库存","0","test_deduct_qty_negative_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
+"POST /api/coupons/<cid>/apply now < valid_from —— 未生效无优惠。
 
-验证点: 201；payable == 89.0（等价 normal）。
-","0","test_create_order_default_member_level","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"POST /api/coupons/C-NOPE/apply —— 券号不存在返回 404。
-
-验证点: 404 + error。
-","0","test_apply_unknown_coupon_404","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"异常输入（非法类型）：qty 为字符串应拒绝（或抛 TypeError），不得改动库存","0","test_deduct_qty_string_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
-"等价类（有效输入）：金额 >= threshold，减免 amount","0","test_full_reduction_qualified","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
-"边界值：生效日当天 valid_from 整点应可用（闭区间左端点）","0","test_valid_on_valid_from_boundary","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
-"POST /api/orders 副作用 —— 下单成功后模块级 STOCK 被正确扣减。
-
-验证点: BK-001 下 3 件后 STOCK[""BK-001""] == 47。
-","0","test_stock_deducted_after_order","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"边界值：订单金额恰好 = threshold（""满 threshold""含等于），应减免","0","test_full_reduction_exactly_threshold","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
+验证点: 200；saving == 0.0。
+","0","test_apply_before_valid_from","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"等价类：普通会员、无满减，总额 = 小计，两位小数","0","test_total_basic_normal_no_promo","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
 "POST /api/coupons/C-DISC-85/apply 金额 200 —— 85 折优惠 30 元（< 封顶 50）。
 
 验证点: 200；saving 精确等于 30.0（需求: 金额保留两位小数）。
 现状缺陷 #2: coupon_saving 未 round，返回 30.000000000000004 -> 失败。
 ","0","test_apply_discount_under_cap","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"POST /api/orders 书籍满减（高于阈值）—— 89*2=178 > 100 立减 10。
+
+验证点: 201；normal payable == 168.0。
+","0","test_create_order_book_promo_above_threshold","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
 "POST /api/coupons/C-FULL-20/apply 金额恰为 200 —— 阈值闭边界（>=）。
 
 验证点: 200；saving == 20.0。
 ","0","test_apply_full_reduction_exact_threshold","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"异常输入（负数）：负金额 + 满减券（低门槛）也必须返回 0","0","test_negative_amount_full_reduction_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
+"等价类（有效输入）：书籍小计 > 100，减免 10","0","test_book_promotion_above_threshold","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"需求规则4（精度）：结果必须保留两位小数。
+100 * 0.95 的浮点噪声 95.00000000000001 不可接受。","0","test_total_gold_with_book_promo_two_decimals","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"等价类（有效输入）：金额 >= threshold，减免 amount","1","test_full_reduction_qualified","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
+"POST /api/coupons/<cid>/apply now > valid_to —— 过期券无优惠。
+
+验证点: 200；saving == 0.0。
+","0","test_apply_after_valid_to","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"异常输入（非法类型）：bool 是 int 子类但不应视为合法数量","0","test_deduct_bool_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
+"等价类：无书籍商品，减免 0","0","test_book_promotion_no_books","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"POST /api/coupons/C-FULL-20/apply 金额 199.99 —— 未达阈值无优惠。
+
+验证点: 200；saving == 0.0。
+","0","test_apply_full_reduction_below_threshold","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"异常输入（空）：空列表减免 0","0","test_book_promotion_empty","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"边界值：qty = stock + 1，拒绝且库存不变（不得负库存）","0","test_deduct_more_than_stock_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
+"POST /api/orders 库存边界 —— qty == stock(10) 应成功并清空库存。
+
+验证点: 第一次 201；随后再下 1 件 -> 409。
+","0","test_create_order_qty_equals_stock","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"异常输入（非法类型）：qty 为浮点数 2.5 非正整数，应拒绝","0","test_deduct_qty_float_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
+"等价类（有效输入）：多商品小计 = Σ(price × qty)","0","test_subtotal_basic","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"POST /api/orders 副作用 —— 下单成功后模块级 STOCK 被正确扣减。
+
+验证点: BK-001 下 3 件后 STOCK[""BK-001""] == 47。
+","0","test_stock_deducted_after_order","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"POST /api/orders 书籍满减边界 —— BK-002 单价 100，qty=1 恰好 100 元。
+
+验证点（需求: 满 100 含 100）: 201 且 payable == 90.0。
+现状缺陷 #1: pricing.book_promotion 用严格大于，实际返回 100.0 -> 用例失败。
+","0","test_create_order_book_promo_exact_100","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"等价类：normal 无折扣，rate = 1.0","0","test_member_rate_normal","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"异常输入（0）：订单金额为 0 不是正数，优惠为 0","0","test_zero_amount_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
+"等价类：gold 9 折，rate = 0.90","0","test_member_rate_gold","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"POST /api/coupons/C-DISC-85/apply 金额 500 —— 优惠 75 触发封顶 50。
+
+验证点: 200；saving == 50.0。
+","1","test_apply_discount_capped","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"POST /api/coupons/<cid>/apply 缺 order_amount —— 非法参数，契约要求 400。
+
+验证点: 400 + error。现状: None 参与乘法 -> 500 -> 失败。
+","0","test_apply_order_amount_missing_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"边界值：到期日当天 valid_to 整点应仍可使用（闭区间右端点，需求 v1.2）","0","test_valid_on_valid_to_boundary","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
+"边界值：书籍小计 = 99.99（略低于阈值），不减免","0","test_book_promotion_just_below_100","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
 "POST /api/orders qty=0 —— 非法参数，契约要求 400。
 
 验证点: 400 + error。现状: 返回 201（缺陷 #6/#5）-> 用例失败。
-","0","test_order_qty_zero_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
-"等价类：无书籍商品，减免 0","0","test_book_promotion_no_books","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
-"边界值：订单金额 99.99（略低于 threshold），不减免","0","test_full_reduction_below_threshold","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
-"等价类：silver 95 折，rate = 0.95","0","test_member_rate_silver","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+","1","test_order_qty_zero_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"POST /api/coupons/<cid>/apply now == valid_to 整点 —— 闭区间终点当天仍可用。
+
+验证点（需求 v1.2 第 3 条）: 200 且 saving == 20.0。
+现状缺陷 #3: coupon.py 用 now < valid_to，返回 0.0 -> 用例失败。
+","1","test_apply_at_valid_to_boundary","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"POST /api/coupons/C-FULL-20/apply 金额 250 —— 满 200 减 20。
+
+验证点: 200；saving == 20.0。
+","1","test_apply_full_reduction_above_threshold","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"等价类：非 book 品类不参与书籍满减","0","test_book_promotion_mixed_types_only_book_counts","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"等价类（有效输入）：9 折券优惠 = amount × (1 - rate)","0","test_discount_basic","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
 "需求规则4（精度）：silver 95 折结果保留两位小数。
 小计 21.00 → 21.00 × 0.95 = 19.95，不允许浮点噪声。","0","test_total_silver_precision","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"POST /api/orders 缺 sku 字段 —— sku 为 None 等价于不存在。
+
+验证点: 404 + error。
+","0","test_order_missing_sku_404","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"异常输入（非法值）：未知会员等级应抛 ValueError","0","test_member_rate_unknown_level","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"POST /api/orders 缺 qty 字段 —— 非法参数，契约要求 400。
+
+验证点: 400 + error。现状: None 与 int 比较抛 TypeError -> 500 -> 失败。
+","0","test_order_qty_missing_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"边界值：生效日当天 valid_from 整点应可用（闭区间左端点）","0","test_valid_on_valid_from_boundary","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
+"异常输入（空）：空订单总额为 0","0","test_total_empty_items","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"POST /api/orders qty=1.5 —— 数量必须为正整数，契约要求 400。
+
+验证点: 400 + error。现状: 返回 201 且库存被扣成小数 -> 失败。
+","0","test_order_qty_float_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"异常输入（非法键）：sku 不存在返回 False","0","test_deduct_unknown_sku","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
+"等价类：silver 95 折，rate = 0.95","0","test_member_rate_silver","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"POST /api/orders 缺省 member_level —— 默认 normal，无折扣。
+
+验证点: 201；payable == 89.0（等价 normal）。
+","0","test_create_order_default_member_level","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"POST /api/orders 带不存在券号的宽容行为（契约未定义 404）。
+
+验证点: 201 且 coupon_saving == 0（不崩溃、不倒扣）。
+","1","test_create_order_with_unknown_coupon","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"边界值：订单金额恰好 = threshold（""满 threshold""含等于），应减免","0","test_full_reduction_exactly_threshold","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
+"边界值：书籍小计恰好 = 100（""满100元""含100），应减免 10","0","test_book_promotion_exactly_100","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"POST /api/coupons/C-NOPE/apply —— 券号不存在返回 404。
+
+验证点: 404 + error。
+","1","test_apply_unknown_coupon_404","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"POST /api/coupons/<cid>/apply order_amount=0 —— 需求要求金额为正数。
+
+验证点: 400 + error。现状: 返回 200 saving=0 -> 失败。
+","1","test_apply_order_amount_zero_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"POST /api/orders 带满减券 —— EL-001 399 >= 200 减 20。
+
+验证点: 201；coupon_saving == 20.0；payable == 379.0。
+","0","test_create_order_with_full_reduction_coupon","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"等价类（有效输入）：库存充足，扣减成功且库存更新","0","test_deduct_normal","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
+"等价类：有效期中间时间点可用","0","test_valid_inside_window","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
+"需求规则4（精度）：第三位小数按 ROUND_HALF_UP 保留两位。
+3 件 10.005 元：小计 30.015 → 30.02（普通会员）","0","test_total_result_rounded_half_up","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"异常输入（非法值）：未知券类型返回 0","0","test_unknown_coupon_type","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
+"POST /api/orders gold —— 9 折（399 -> 359.1），无书籍满减（非 book）。
+
+验证点: 201；payable == 359.1。
+","1","test_create_order_gold","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"POST /api/orders qty=""abc"" —— 非法参数，契约要求 400。
+
+验证点: 400 + error。现状: inventory.deduct 内 TypeError -> 500 -> 失败。
+","0","test_order_qty_not_numeric_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"异常输入（空）：空订单小计为 0","0","test_subtotal_empty_items","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"等价类：优惠低于封顶时不封顶","0","test_discount_not_capped","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
+"异常输入（负数）：订单金额为负时优惠必须为 0（折扣券不得算出负优惠/反向加钱）","0","test_negative_amount_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
+"等价类：优惠超过封顶 cap 时取 cap","0","test_discount_capped","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
+"等价类：gold 会员 + 书籍满 100 减 10：(100 - 10) × 0.9 = 81.00","0","test_total_gold_book_promo_value","tests.unit","2026-11-01","passed","2026-11-01","","test_pricing","",""
+"边界值：最小正整数 qty=1 可扣减","0","test_deduct_qty_one","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
+"POST /api/coupons/C-DISC-85/apply order_amount=-100 —— 负数为非法参数。
+
+验证点: 400 + error。现状缺陷 #4: 折扣券算出 saving=-15 且返回 200 -> 失败。
+","0","test_apply_order_amount_negative_400","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"边界值：订单金额 99.99（略低于 threshold），不减免","0","test_full_reduction_below_threshold","tests.unit","2026-11-01","passed","2026-11-01","","test_coupon","",""
+"POST /api/orders 书籍满减（低于阈值）—— 89 < 100 不减免。
+
+验证点: 201；payable == 89.0。
+","0","test_create_order_book_promo_below_threshold","tests.api","2026-11-01","passed","2026-11-01","","test_orders_api","",""
+"异常输入（非法类型）：qty 为字符串应拒绝（或抛 TypeError），不得改动库存","0","test_deduct_qty_string_rejected","tests.unit","2026-11-01","passed","2026-11-01","","test_inventory","",""
