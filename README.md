@@ -106,6 +106,22 @@ export LANGFUSE_HOST=https://us.cloud.langfuse.com   # 区域须与注册时一�
 密钥存放在 `.env`（已加入 `.gitignore`）。每次上报会打印 trace 的看板直达链接，
 在 Langfuse UI 中可看到跨轮趋势（Round1 0.725 → Round3 1.0）与单轮五阶段下钻。
 
+### 6.3 AI 测试平台（路线 C · 本机版）
+
+```bash
+cd ecom-ai-testing
+.venv/bin/python -m uvicorn webapp.main:app --host 0.0.0.0 --port 8080
+# 本机访问 http://127.0.0.1:8080/ ；同一局域网设备访问 http://<本机IP>:8080/
+```
+
+平台四区：①AI 生成功能用例（等价类/边界值/异常输入）②AI 生成接口用例（契约驱动）
+③一键执行（pytest 80 用例实时日志 + Allure 采集）④报告中心（xlsx / Allure / Langfuse 公开看板 / L4 治理报告）。
+
+- 生成引擎三模式：`LLM_PROVIDER=mock|glm|deepseek`（mock 为项目真实用例快照，不依赖 Key）
+- 演示截图：`reports/platform-demo.png`
+- 工程教训：后端目录不可命名 `platform`（与 Python 标准库冲突，本项目真实踩坑并记录）
+- GitHub Pages：`gh-pages` 分支含 Allure 在线报告，推送后 Settings → Pages → 选 gh-pages 分支即生效
+
 ## 7. 面试讲解要点
 
 1. **测试设计方法不是空话**：每个 AI 生成用例的 docstring 都标注了等价类/边界值/异常输入，可现场翻代码。
