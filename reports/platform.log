@@ -14,3 +14,6 @@ INFO:     127.0.0.1:60901 - "POST /api/gen/api HTTP/1.1" 200 OK
 INFO:     127.0.0.1:60901 - "POST /api/run HTTP/1.1" 200 OK
 INFO:     127.0.0.1:60901 - "GET /api/run/1a626b5a HTTP/1.1" 200 OK
 INFO:     127.0.0.1:60908 - "GET /api/governance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60965 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60966 - "GET /allure/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60967 - "GET /api/report/xlsx HTTP/1.1" 200 OK
